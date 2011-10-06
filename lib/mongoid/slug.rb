@@ -62,16 +62,24 @@ module Mongoid
 
     def find_unique_slug
       slug    = slug_builder.call(self)
-      pattern = /^#{Regexp.escape(slug)}(-\d+)?$/
 
-      existing_slugs_count =
-        self.class.
-        only(slug_name).
-        where(slug_name => pattern, :_id.ne => _id).
-        count
+      # We can't do a simple query if this document belongs
+      # to an embedded collection. But that's no big deal,
+      # because we don't care about duplicate/redundant data
+      # in this case anyway.
 
-      if existing_slugs_count > 0
-        slug << "-#{existing_slugs_count}"
+      unless self.embedded?
+        pattern = /^#{Regexp.escape(slug)}(-\d+)?$/
+
+        existing_slugs_count =
+          self.class.
+          only(slug_name).
+          where(slug_name => pattern, :_id.ne => _id).
+          count
+
+        if existing_slugs_count > 0
+          slug << "-#{existing_slugs_count}"
+        end
       end
 
       slug
