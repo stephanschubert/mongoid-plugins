@@ -10,6 +10,9 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'mongoid', ['~> 2.0']
   s.add_runtime_dependency 'bson_ext', ['~> 1.3']
 
+  # TODO We need 'jazen/santas-little-helpers' as it provides the
+  #      String#to_url method.
+
   s.add_development_dependency 'rspec', ['~> 2.0']
   s.add_development_dependency 'mongoid-rspec', ['~> 1.4']
 end
