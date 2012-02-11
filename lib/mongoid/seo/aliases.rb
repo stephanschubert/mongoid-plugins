@@ -1,4 +1,4 @@
-require "active_support/concer"
+require "active_support/concern"
 
 module Mongoid
   module SEO
