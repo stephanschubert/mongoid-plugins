@@ -19,7 +19,6 @@ module Mongoid
 
         # Setup slugged field
         field slug_name, type: String
-        validates_presence_of slug_name
 
         # Setup an index on the slugged field
         if options[:index]
