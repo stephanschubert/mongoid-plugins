@@ -7,6 +7,7 @@ Gem::Specification.new do |s|
   s.description = "A collection of modules/plugins for Mongoid."
   s.files       = `git ls-files`.split("\n")
 
+  s.add_runtime_dependency 'activesupport'
   s.add_runtime_dependency 'mongoid', ['~> 2.4.3']
   s.add_runtime_dependency 'bson_ext', ['~> 1.5.2']
 
