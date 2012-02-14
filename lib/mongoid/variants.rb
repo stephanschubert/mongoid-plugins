@@ -5,7 +5,26 @@ module Mongoid
     extend ActiveSupport::Concern
 
     included do
+      # Save all variants as an array of hashes containing
+      # the key/value pairs which differ from the document's attributes
       field :variants, type: Array, default: []
+
+      # Find document with a variant matching the given +options+
+      # +options+ will get automatically scoped to "variants."
+      #
+      # So calling
+      #   Model.with_variant(bacon: true, amount: 5)
+      #
+      # will result in a query like this:
+      #   Model.where("variants.bacon": true, "variants.amount": 5)
+      #
+      scope :with_variant, ->(options) {
+        scoped_options = options.inject({}) do |memo, (k,v)|
+          memo["variants.#{k}"] = v
+          memo
+        end
+        where(scoped_options)
+      }
     end
 
     # These attributes shouldn't be compared because
@@ -17,7 +36,7 @@ module Mongoid
       variants   # That's us!
     )
 
-    # Returns all attributes which differ from +other+
+    # Returns all attributes which differ from the +other+ document ones.
     def variant_attributes(other, options = {})
       blocked_attributes = INTERNAL_ATTRIBUTES + options[:block].to_a
 
