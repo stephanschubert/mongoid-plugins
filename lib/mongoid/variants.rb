@@ -7,7 +7,10 @@ module Mongoid
     included do
       # Save all variants as an array of hashes containing
       # the key/value pairs which differ from the document's attributes
-      field :variants, type: Array, default: []
+      # field :variants, type: Array, default: []
+      embeds_many :variants,
+      class_name: "Mongoid::Variants::Variant",
+      as: :variant_owner
 
       # Find document with a variant matching the given +options+
       # +options+ will get automatically scoped to "variants."
@@ -47,6 +50,31 @@ module Mongoid
         memo[k] = v unless b[k] == v
         memo
       end
+    end
+
+    # The embedded document
+    class Variant
+      include Mongoid::Document
+      embedded_in :variant_owner, polymorphic: true
+
+      # Applies the variant's attributes to the +document+
+      # (defaults to the variant's owner)
+      #
+      # You can exclude attributes using the +:block: option.
+      #
+      def apply(document = variant_owner, options = {})
+        document.tap do |doc|
+          # Apply all non-blocked attributes to the document
+          blocked_attributes = INTERNAL_ATTRIBUTES + options[:block].to_a
+          attributes.block(*blocked_attributes).each do |k,v|
+            doc.send("#{k}=", v)
+          end
+
+          # Pick up any changes to '*_id' attributes
+          doc.reload_relations
+        end
+      end
+
     end
   end
 end
