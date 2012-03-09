@@ -19,7 +19,7 @@ module Mongoid
 
       accepts_nested_attributes_for :localizations
 
-      before_create :setup_empty_localizations
+      after_initialize :setup_empty_localizations
     end
 
     def_delegators "self.class",
