@@ -75,6 +75,12 @@ module Mongoid
         end
       end
 
+      # Get all variants for a given field
+      def self.of(field)
+        field = field.to_sym
+        where(field.exists => true).only(field).map(&field)
+      end
     end
+
   end
 end
