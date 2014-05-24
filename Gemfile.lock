@@ -1,49 +1,82 @@
+GIT
+  remote: git://github.com/jazen/santas-little-helpers.git
+  revision: 082a78b05f7a12e7b2e957ebec204f5a5b72ccf0
+  specs:
+    santas-little-helpers (0.0.1)
+
 PATH
   remote: .
   specs:
     mongoid-plugins (0.0.1)
-      bson_ext (~> 1.5.2)
-      mongoid (~> 2.4.3)
+      activesupport
+      bson_ext
+      mongo_ext
+      mongoid
+      urlify
 
 GEM
   remote: http://rubygems.org/
   specs:
-    activemodel (3.2.1)
-      activesupport (= 3.2.1)
+    activemodel (3.2.18)
+      activesupport (= 3.2.18)
       builder (~> 3.0.0)
-    activesupport (3.2.1)
-      i18n (~> 0.6)
+    activesupport (3.2.18)
+      i18n (~> 0.6, >= 0.6.4)
       multi_json (~> 1.0)
-    bson (1.5.2)
-    bson_ext (1.5.2)
-      bson (= 1.5.2)
-    builder (3.0.0)
-    diff-lcs (1.1.3)
-    i18n (0.6.0)
-    mongo (1.5.2)
-      bson (= 1.5.2)
-    mongoid (2.4.3)
-      activemodel (~> 3.1)
-      mongo (~> 1.3)
-      tzinfo (~> 0.3.22)
-    mongoid-rspec (1.4.4)
-      mongoid (~> 2.0)
-      rspec (~> 2)
-    multi_json (1.0.4)
-    rspec (2.7.0)
-      rspec-core (~> 2.7.0)
-      rspec-expectations (~> 2.7.0)
-      rspec-mocks (~> 2.7.0)
-    rspec-core (2.7.1)
-    rspec-expectations (2.7.0)
-      diff-lcs (~> 1.1.2)
-    rspec-mocks (2.7.0)
-    tzinfo (0.3.31)
+    bson (1.10.1)
+    bson_ext (1.10.1)
+      bson (~> 1.10.1)
+    builder (3.0.4)
+    byebug (2.7.0)
+      columnize (~> 0.3)
+      debugger-linecache (~> 1.2)
+    coderay (1.1.0)
+    columnize (0.8.9)
+    database_cleaner (1.2.0)
+    debugger-linecache (1.2.0)
+    diff-lcs (1.2.5)
+    i18n (0.6.9)
+    method_source (0.8.2)
+    mongo_ext (0.19.3)
+    mongoid (3.1.6)
+      activemodel (~> 3.2)
+      moped (~> 1.4)
+      origin (~> 1.0)
+      tzinfo (~> 0.3.29)
+    mongoid-rspec (1.11.0)
+      mongoid (~> 3.1.6)
+      rake
+      rspec (>= 2.14)
+    moped (1.5.2)
+    multi_json (1.10.1)
+    origin (1.1.0)
+    pry (0.9.12.6)
+      coderay (~> 1.0)
+      method_source (~> 0.8)
+      slop (~> 3.4)
+    pry-byebug (1.3.2)
+      byebug (~> 2.7)
+      pry (~> 0.9.12)
+    rake (10.3.2)
+    rspec (2.14.1)
+      rspec-core (~> 2.14.0)
+      rspec-expectations (~> 2.14.0)
+      rspec-mocks (~> 2.14.0)
+    rspec-core (2.14.8)
+    rspec-expectations (2.14.5)
+      diff-lcs (>= 1.1.3, < 2.0)
+    rspec-mocks (2.14.6)
+    slop (3.5.0)
+    tzinfo (0.3.39)
+    urlify (0.2.2)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  database_cleaner
   mongoid-plugins!
-  mongoid-rspec (~> 1.4)
-  rspec (~> 2.0)
+  mongoid-rspec
+  pry-byebug
+  rspec
+  santas-little-helpers!

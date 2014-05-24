@@ -14,9 +14,10 @@ describe Mongoid::Slug do
       end
     end
 
-    let(:book) do
-      Book.create :title => "A thousand plateaus"
-    end
+    let(:book) { Book.create(:title => "A thousand plateaus") }
+    subject    { book }
+
+    # it { should have_index_for(slug: 1) }
 
     it "generates a slug" do
       book.slug.should == "a-thousand-plateaus"
@@ -166,20 +167,20 @@ describe Mongoid::Slug do
         include Mongoid::Document
         include Mongoid::Slug
 
-        field :identity
+        field :author
         field :title
         field :medium
 
         # A fairly complex scenario, where we want to create a slug out
-        # of an identity field, which comprises name of artist and some
+        # of an author field, which comprises name of artist and some
         # more bibliographic info in parantheses, and the title of the work.
         #
         # We are only interested in the name of the artist so we remove the
         # paranthesized details.
 
-        slug :identity, :title do |doc|
+        slug :author, :title do |doc|
           [
-            doc.identity.gsub(/\s*\([^)]+\)/, '').to_url,
+            doc.author.gsub(/\s*\([^)]+\)/, '').to_url,
             doc.title.to_url
           ].join('/')
         end
@@ -187,9 +188,11 @@ describe Mongoid::Slug do
     end
 
     let(:caption) do
-      Caption.create(:identity => 'Edward Hopper (American, 1882-1967)',
-                     :title => 'Soir Bleu, 1914',
-                     :medium => 'Oil on Canvas')
+      Caption.create(
+        :author => 'Edward Hopper (American, 1882-1967)',
+        :title    => 'Soir Bleu, 1914',
+        :medium   => 'Oil on Canvas'
+      )
     end
 
     it "generates a slug" do
@@ -203,22 +206,20 @@ describe Mongoid::Slug do
     end
 
     it "does not change slug if slugged fields have changed but generated slug is identical" do
-      caption.identity = 'Edward Hopper'
+      caption.author = 'Edward Hopper'
       caption.save
       caption.slug.should == 'edward-hopper/soir-bleu-1914'
     end
 
     it "finds by slug" do
-      Caption.find_by_slug(caption.slug).should eql caption
+      Caption.find_by_slug(caption.slug).should eql(caption)
     end
 
   end
 
   context "when slugged field contains non-ASCII characters" do
 
-    let(:book) do
-      Book.create :title => "A thousand plateaus"
-    end
+    let(:book) { Book.create(:title => "A thousand plateaus") }
 
     # it "slugs Cyrillic characters" do
     #   book.title = "Капитал"
@@ -243,11 +244,9 @@ describe Mongoid::Slug do
       book.save
       book.slug.should eql 'paul-cezanne'
     end
-
   end
 
-  describe ".find_by_slug" do # ----------------------------
-
+  describe ".find_by_slug" do
     let(:book) { Book.create(:title => "A Thousand Plateaus") }
 
     it "returns nil if no document is found" do
@@ -259,8 +258,7 @@ describe Mongoid::Slug do
     end
   end
 
-  describe ".find_by_slug!" do # ---------------------------
-
+  describe ".find_by_slug!" do
     let(:book) { Book.create(:title => "A Thousand Plateaus") }
 
     it "raises a Mongoid::Errors::DocumentNotFound error if no document is found" do
@@ -287,13 +285,4 @@ describe Mongoid::Slug do
   #   end
 
   # end
-
-  context "when :index is passed as an argument" do
-
-    it "should define an index" do
-      Book.should have_index(:slug)
-    end
-
-  end
-
 end

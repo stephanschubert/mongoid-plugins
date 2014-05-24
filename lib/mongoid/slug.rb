@@ -1,4 +1,5 @@
 require "active_support/concern"
+require "santas-little-helpers"
 
 module Mongoid
   module Slug
@@ -8,7 +9,7 @@ module Mongoid
       cattr_accessor :slugged_fields, :slug_name, :slug_builder
     end
 
-    module ClassMethods # ----------------------------------
+    module ClassMethods
 
       def slug(*fields, &block)
         options = fields.extract_options!
@@ -17,13 +18,9 @@ module Mongoid
         self.slugged_fields = fields.map(&:to_s)
         self.slug_builder   = block_given? ? block : default_slug_builder
 
-        # Setup slugged field
+        # Setup slugged field and index
         field slug_name, type: String
-
-        # Setup an index on the slugged field
-        if options[:index]
-          index slug_name
-        end
+        index({ slug_name => 1 }) if options[:index]
 
         # Generate slug on every save or keep the first one?
         if options[:permanent]
@@ -44,17 +41,16 @@ module Mongoid
         CODE
       end
 
-      private # --------------------------------------------
+      private
 
       def default_slug_builder
         lambda do |doc|
           slugged_fields.map { |f| doc.read_attribute(f) }.join(" ").to_url
         end
       end
-
     end
 
-    private # ----------------------------------------------
+    private
 
     def generate_slug
       write_attribute slug_name, find_unique_slug
