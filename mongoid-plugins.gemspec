@@ -8,12 +8,13 @@ Gem::Specification.new do |s|
   s.files       = `git ls-files`.split("\n")
 
   s.add_runtime_dependency 'activesupport'
-  s.add_runtime_dependency 'mongoid', ['~> 2.4.3']
-  s.add_runtime_dependency 'bson_ext', ['~> 1.5.2']
+  s.add_runtime_dependency 'mongoid'
+  s.add_runtime_dependency 'bson_ext'
+  s.add_runtime_dependency 'mongo_ext'
+  s.add_runtime_dependency 'urlify'
 
-  # TODO We need 'jazen/santas-little-helpers' as it provides the
-  #      String#to_url method.
-
-  s.add_development_dependency 'rspec', ['~> 2.0']
-  s.add_development_dependency 'mongoid-rspec', ['~> 1.4']
+  s.add_development_dependency 'rspec'
+  s.add_development_dependency 'mongoid-rspec'
+  s.add_development_dependency 'database_cleaner'
+  s.add_development_dependency 'pry-byebug'
 end

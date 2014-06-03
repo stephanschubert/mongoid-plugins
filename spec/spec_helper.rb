@@ -5,24 +5,24 @@ Bundler.setup
 require 'rspec'
 require 'mongoid'
 require 'mongoid-rspec'
+require 'database_cleaner'
+require 'pry-byebug'
 
 require 'mongoid/seo'
 require 'mongoid/slug'
 
-Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
+cwd = File.dirname(__FILE__)
 
-Mongoid.configure do |config|
-  name = "rspec-mongoid-plugins"
-  host = "localhost"
-  config.master = Mongo::Connection.new.db(name)
-end
+Dir["#{cwd}/support/**/*.rb"].each { |f| require f }
+
+Mongoid.load!("#{cwd}/../config/mongoid.yml", :test)
 
 RSpec.configure do |config|
   config.include RSpec::Matchers
-  config.include Mongoid::Matchers
+  config.include Mongoid::Matchers, type: :model
   config.mock_with :rspec
 
-  config.after :all do
-    Mongoid.master.collections.select{ |c| c.name !~ /system/ }.each(&:drop)
-  end
+  config.before(:suite) { DatabaseCleaner[:mongoid].strategy = :truncation }
+  config.before(:each)  { DatabaseCleaner[:mongoid].start }
+  config.after(:each)   { DatabaseCleaner[:mongoid].clean }
 end

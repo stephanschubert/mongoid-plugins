@@ -1,0 +1,6 @@
+test:
+  sessions:
+    default:
+      database: rspec-mongoid-plugins
+      hosts:
+        - localhost:27017
