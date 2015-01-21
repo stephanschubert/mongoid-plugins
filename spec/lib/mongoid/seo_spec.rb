@@ -5,7 +5,7 @@ describe Mongoid::SEO do
   let(:klass) { Class.new }
   subject     { klass }
 
-  before(:all) do
+  before do
     klass.send :include, Mongoid::Document
     klass.send :include, Mongoid::SEO
   end
@@ -18,6 +18,5 @@ describe Mongoid::SEO do
     it "should return all fields added by the plugin" do
       klass.seo_fields.should == [ :page_title, :meta_description ]
     end
-
   end
 end
