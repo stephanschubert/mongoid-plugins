@@ -20,35 +20,35 @@ describe Mongoid::Slug do
     # it { should have_index_for(slug: 1) }
 
     it "generates a slug" do
-      book.slug.should == "a-thousand-plateaus"
+      expect(book.slug).to eq("a-thousand-plateaus")
     end
 
     it "updates the slug" do
       book.title = "Anti Ödipus"
       book.save
-      book.slug.should == "anti-oedipus"
+      expect(book.slug).to eq("anti-oedipus")
     end
 
     it "generates a unique slug by appending a counter to duplicate text" do
       15.times { |x|
         dup = Book.create(:title => book.title)
-        dup.slug.should eql "a-thousand-plateaus-#{x+1}"
+        expect(dup.slug).to eql "a-thousand-plateaus-#{x+1}"
       }
     end
 
     it "does not update slug if slugged fields have not changed" do
       book.save
-      book.slug.should == "a-thousand-plateaus"
+      expect(book.slug).to eq("a-thousand-plateaus")
     end
 
     it "does not change slug if slugged fields have changed but generated slug is identical" do
       book.title = "a thousand plateaus"
       book.save
-      book.slug.should == "a-thousand-plateaus"
+      expect(book.slug).to eq("a-thousand-plateaus")
     end
 
     it "finds by slug" do
-      Book.find_by_slug(book.slug).should == book
+      expect(Book.find_by_slug(book.slug)).to eq(book)
     end
 
   end
@@ -72,39 +72,39 @@ describe Mongoid::Slug do
     end
 
     it "generates a slug" do
-      author.slug.should == "gilles-deleuze"
+      expect(author.slug).to eq("gilles-deleuze")
     end
 
     it "updates the slug" do
       author.first_name = "Félix"
       author.last_name = "Guattari"
       author.save
-      author.slug.should == "felix-guattari"
+      expect(author.slug).to eq("felix-guattari")
     end
 
     it "generates a unique slug by appending a counter to duplicate text" do
       dup = Author.create(
         :first_name => author.first_name,
         :last_name => author.last_name)
-      dup.slug.should == 'gilles-deleuze-1'
+      expect(dup.slug).to eq('gilles-deleuze-1')
 
       dup2 = Author.create(
         :first_name => author.first_name,
         :last_name => author.last_name)
 
       dup.save
-      dup2.slug.should == 'gilles-deleuze-2'
+      expect(dup2.slug).to eq('gilles-deleuze-2')
     end
 
     it "does not update slug if slugged fields have changed but generated slug is identical" do
       author.last_name = "DELEUZE"
       author.save
-      author.slug.should == 'gilles-deleuze'
+      expect(author.slug).to eq('gilles-deleuze')
     end
 
     it "finds by slug" do
       author
-      Author.find_by_slug("gilles-deleuze").should == author
+      expect(Author.find_by_slug("gilles-deleuze")).to eq(author)
     end
 
   end
@@ -126,13 +126,13 @@ describe Mongoid::Slug do
     end
 
     it "sets an alternative slug field name" do
-      person.should respond_to(:permalink)
-      person.permalink.should eql "john-doe"
+      expect(person).to respond_to(:permalink)
+      expect(person.permalink).to eql "john-doe"
     end
 
     it "finds by slug" do
       person
-      Person.find_by_permalink("john-doe").should == person
+      expect(Person.find_by_permalink("john-doe")).to eq(person)
     end
 
   end
@@ -156,7 +156,7 @@ describe Mongoid::Slug do
     it "does not update the slug when the slugged fields change" do
       city.name = "Berlin"
       city.save
-      city.slug.should == "leipzig"
+      expect(city.slug).to eq("leipzig")
     end
   end
 
@@ -196,23 +196,23 @@ describe Mongoid::Slug do
     end
 
     it "generates a slug" do
-      caption.slug.should == 'edward-hopper/soir-bleu-1914'
+      expect(caption.slug).to eq('edward-hopper/soir-bleu-1914')
     end
 
     it "updates the slug" do
       caption.title = 'Road in Maine, 1914'
       caption.save
-      caption.slug.should == "edward-hopper/road-in-maine-1914"
+      expect(caption.slug).to eq("edward-hopper/road-in-maine-1914")
     end
 
     it "does not change slug if slugged fields have changed but generated slug is identical" do
       caption.author = 'Edward Hopper'
       caption.save
-      caption.slug.should == 'edward-hopper/soir-bleu-1914'
+      expect(caption.slug).to eq('edward-hopper/soir-bleu-1914')
     end
 
     it "finds by slug" do
-      Caption.find_by_slug(caption.slug).should eql(caption)
+      expect(Caption.find_by_slug(caption.slug)).to eql(caption)
     end
 
   end
@@ -242,7 +242,7 @@ describe Mongoid::Slug do
     it "slugs non-ASCII Latin characters" do
       book.title = 'Paul Cézanne'
       book.save
-      book.slug.should eql 'paul-cezanne'
+      expect(book.slug).to eql 'paul-cezanne'
     end
   end
 
@@ -250,11 +250,11 @@ describe Mongoid::Slug do
     let(:book) { Book.create(:title => "A Thousand Plateaus") }
 
     it "returns nil if no document is found" do
-      Book.find_by_slug(:title => "Anti Oedipus").should be_nil
+      expect(Book.find_by_slug(:title => "Anti Oedipus")).to be_nil
     end
 
     it "returns the document if it is found" do
-      Book.find_by_slug(book.slug).should == book
+      expect(Book.find_by_slug(book.slug)).to eq(book)
     end
   end
 
@@ -262,13 +262,13 @@ describe Mongoid::Slug do
     let(:book) { Book.create(:title => "A Thousand Plateaus") }
 
     it "raises a Mongoid::Errors::DocumentNotFound error if no document is found" do
-      lambda {
+      expect {
         Book.find_by_slug!(:title => "Anti Oedipus")
-      }.should raise_error(Mongoid::Errors::DocumentNotFound)
+      }.to raise_error(Mongoid::Errors::DocumentNotFound)
     end
 
     it "returns the document when it is found" do
-      Book.find_by_slug!(book.slug).should == book
+      expect(Book.find_by_slug!(book.slug)).to eq(book)
     end
   end
 

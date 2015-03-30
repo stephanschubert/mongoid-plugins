@@ -16,7 +16,7 @@ describe Mongoid::SEO do
   describe ".seo_fields" do
 
     it "should return all fields added by the plugin" do
-      klass.seo_fields.should == [ :page_title, :meta_description ]
+      expect(klass.seo_fields).to eq([ :page_title, :meta_description ])
     end
   end
 end
